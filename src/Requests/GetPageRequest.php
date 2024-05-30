@@ -22,6 +22,9 @@ class GetPageRequest extends Request implements Cacheable
     public function __construct(
         protected string $slug = 'start',
     ) {
+        if (config('fabriq-connector.enable_cache')) {
+            $this->disableCaching();
+        }
     }
 
     /**

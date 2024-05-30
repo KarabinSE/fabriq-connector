@@ -24,7 +24,9 @@ class GetMainMenuRequest extends Request implements Cacheable
         public string $slug = 'main_menu_sv',
         public array $params = [],
     ) {
-
+        if (config('fabriq-connector.enable_cache')) {
+            $this->disableCaching();
+        }
     }
 
     protected function defaultQuery(): array

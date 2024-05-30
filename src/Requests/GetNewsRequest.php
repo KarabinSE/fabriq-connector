@@ -22,7 +22,9 @@ class GetNewsRequest extends Request implements Cacheable
     public function __construct(
         public array $params = []
     ) {
-
+        if (config('fabriq-connector.enable_cache')) {
+            $this->disableCaching();
+        }
     }
 
     protected function defaultQuery(): array
