@@ -4,7 +4,6 @@ namespace Karabin\FabriqConnector;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Karabin\FabriqConnector\Commands\FabriqConnectorCommand;
 
 class FabriqConnectorServiceProvider extends PackageServiceProvider
 {
@@ -17,9 +16,6 @@ class FabriqConnectorServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('fabriq-connector')
-            ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_fabriq-connector_table')
-            ->hasCommand(FabriqConnectorCommand::class);
+            ->hasConfigFile();
     }
 }
