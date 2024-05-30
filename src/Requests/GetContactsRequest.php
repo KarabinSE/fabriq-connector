@@ -22,7 +22,7 @@ class GetContactsRequest extends Request implements Cacheable
     public function __construct(
         public array $params = []
     ) {
-        if (config('fabriq-connector.enable_cache')) {
+        if (! config('fabriq-connector.enable_cache')) {
             $this->disableCaching();
         }
     }
@@ -47,7 +47,7 @@ class GetContactsRequest extends Request implements Cacheable
 
     public function resolveCacheDriver(): Driver
     {
-        return new LaravelCacheDriver(Cache::store('redis'));
+        return new LaravelCacheDriver(Cache::store(config('fabriq-connector.cache_store')));
     }
 
     public function cacheExpiryInSeconds(): int

@@ -22,7 +22,7 @@ class GetPageRequest extends Request implements Cacheable
     public function __construct(
         protected string $slug = 'start',
     ) {
-        if (config('fabriq-connector.enable_cache')) {
+        if (! config('fabriq-connector.enable_cache')) {
             $this->disableCaching();
         }
     }
@@ -42,7 +42,7 @@ class GetPageRequest extends Request implements Cacheable
 
     public function resolveCacheDriver(): Driver
     {
-        return new LaravelCacheDriver(Cache::store('redis'));
+        return new LaravelCacheDriver(Cache::store(config('fabriq-connector.cache_store')));
     }
 
     public function cacheExpiryInSeconds(): int

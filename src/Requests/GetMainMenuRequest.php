@@ -24,7 +24,7 @@ class GetMainMenuRequest extends Request implements Cacheable
         public string $slug = 'main_menu_sv',
         public array $params = [],
     ) {
-        if (config('fabriq-connector.enable_cache')) {
+        if (! config('fabriq-connector.enable_cache')) {
             $this->disableCaching();
         }
     }
@@ -49,7 +49,7 @@ class GetMainMenuRequest extends Request implements Cacheable
 
     public function resolveCacheDriver(): Driver
     {
-        return new LaravelCacheDriver(Cache::store('redis'));
+        return new LaravelCacheDriver(Cache::store(config('fabriq-connector.cache_store')));
     }
 
     public function cacheExpiryInSeconds(): int
