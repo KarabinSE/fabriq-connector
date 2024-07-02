@@ -3,40 +3,23 @@
 namespace Karabin\FabriqConnector\Services;
 
 use Karabin\FabriqConnector\FabriqConnector;
-use Karabin\FabriqConnector\Requests\GetContactsRequest;
-use Karabin\FabriqConnector\Requests\GetNewsRequest;
 
 class BlockService
 {
     protected array $shareArray = [];
 
+    public array $blockMap = [];
+
     public function __construct()
     {
-
+        $this->blockMap = config('fabriq-connector.block_map');
     }
-
-    const array BLOCK_MAP = [
-        'ContactsBlock' => [
-            'request' => GetContactsRequest::class,
-            'key' => 'contacts',
-            'params' => [
-                'include' => 'content',
-            ],
-        ],
-        'NewsBlock' => [
-            'request' => GetNewsRequest::class,
-            'key' => 'news',
-            'params' => [
-                'include' => 'content',
-            ],
-        ],
-    ];
 
     public function parseBlocks(array $blocks)
     {
         foreach ($blocks as $block) {
-            if (array_key_exists($block['block_type']['component_name'], self::BLOCK_MAP)) {
-                $this->share(self::BLOCK_MAP[$block['block_type']['component_name']]);
+            if (array_key_exists($block['block_type']['component_name'], $this->blockMap)) {
+                $this->share($this->blockMap[$block['block_type']['component_name']]);
             }
         }
 

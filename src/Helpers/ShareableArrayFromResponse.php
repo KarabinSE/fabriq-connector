@@ -8,8 +8,6 @@ class ShareableArrayFromResponse
 {
     public static function parse(array $boxes = []): array
     {
-        // $blok
-        // dd('helo', $boxes);
         $blockService = new BlockService();
 
         $shareArray = $blockService
