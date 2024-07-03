@@ -35,7 +35,7 @@ class FabriqConnectorTest extends TestCase
         Saloon::fake([
             GetNewsRequest::class => MockResponse::fixture('news'),
         ]);
-        $connector = new FabriqConnector();
+        $connector = new FabriqConnector(locale: 'en');
         $request = new GetNewsRequest();
 
         // Act
@@ -51,7 +51,7 @@ class FabriqConnectorTest extends TestCase
         Saloon::fake([
             GetContactsRequest::class => MockResponse::fixture('contacts'),
         ]);
-        $connector = new FabriqConnector();
+        $connector = new FabriqConnector('en');
         $request = new GetContactsRequest();
 
         // Act
