@@ -26,6 +26,7 @@ return [
     'enable_cache' => env('FABRIQ_CONNECTOR_ENABLE_CACHE', false),
     'cache_expiry' => env('FABRIQ_CONNECTOR_CACHE_EXPIRY', (3600 * 24) * 7),
     'cache_driver' => env('FABRIQ_CONNECTOR_CACHE_STORE', 'file'),
+    'fabriq_connector_token' => env('FABRIQ_CONNECTOR_TOKEN', ''),
 ];
 
 ```
@@ -33,7 +34,7 @@ return [
 ## Usage
 
 ```php
-$connector = new FabriqConnector();
+$connector = new FabriqConnector(locale: 'en');
 $request = new GetContactsRequest(params: ['include' => 'content']);
 
 $response = $connector->send($request);
