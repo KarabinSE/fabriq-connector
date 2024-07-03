@@ -6,6 +6,7 @@ return [
     'enable_cache' => env('FABRIQ_CONNECTOR_ENABLE_CACHE', false),
     'cache_expiry' => env('FABRIQ_CONNECTOR_CACHE_EXPIRY', (3600 * 24) * 7),
     'cache_store' => env('FABRIQ_CONNECTOR_CACHE_STORE', 'file'),
+    'fabriq_connector_token' => env('FABRIQ_CONNECTOR_TOKEN', ''),
     'block_map' => [
         'ContactsBlock' => [
             'request' => Karabin\FabriqConnector\Requests\GetContactsRequest::class,

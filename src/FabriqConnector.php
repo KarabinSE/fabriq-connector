@@ -2,6 +2,7 @@
 
 namespace Karabin\FabriqConnector;
 
+use Saloon\Http\Auth\TokenAuthenticator;
 use Saloon\Http\Connector;
 use Saloon\Traits\Plugins\AcceptsJson;
 
@@ -9,9 +10,18 @@ class FabriqConnector extends Connector
 {
     use AcceptsJson;
 
-    public function __construct(protected readonly string $locale = 'sv')
-    {
+    protected readonly string $token;
+
+    public function __construct(
+        protected readonly string $locale,
+    ) {
+        $this->token = config('fabriq-connector.fabriq_connector_token');
         $this->headers()->add('X-Locale', $locale);
+    }
+
+    protected function defaultAuth(): TokenAuthenticator
+    {
+        return new TokenAuthenticator($this->token);
     }
 
     public function resolveBaseUrl(): string
