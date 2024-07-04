@@ -28,7 +28,7 @@ class BlockService
 
     public function share(array $block): array
     {
-        $connector = new FabriqConnector();
+        $connector = new FabriqConnector(locale: app()->getLocale());
         $request = new $block['request']($block['params']);
         if (config('app.env') !== 'production') {
             $request->disableCaching();
