@@ -35,7 +35,7 @@ class GetNewsItemRequest extends Request implements Cacheable
 
     protected function cacheKey(): ?string
     {
-        return 'fabriq_articles';
+        return 'fabriq_articles_slug_'.$this->slug;
     }
 
     /**
