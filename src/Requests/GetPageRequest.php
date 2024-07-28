@@ -37,7 +37,7 @@ class GetPageRequest extends Request implements Cacheable
 
     protected function cacheKey(): ?string
     {
-        return 'fabriq_pages_slug_'.$this->slug;
+        return 'fabriq_pages_slug_'.$this->slug.'_'.app()->getLocale();
     }
 
     public function resolveCacheDriver(): Driver

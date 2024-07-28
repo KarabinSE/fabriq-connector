@@ -16,7 +16,6 @@ class FabriqConnector extends Connector
         protected readonly string $locale,
     ) {
         $this->token = config('fabriq-connector.fabriq_connector_token');
-        $this->headers()->add('X-Locale', $locale);
     }
 
     protected function defaultAuth(): TokenAuthenticator
@@ -38,6 +37,7 @@ class FabriqConnector extends Connector
     {
         return [
             'Content-Type' => 'application/json',
+            'X-Locale' => $this->locale,
         ];
     }
 
