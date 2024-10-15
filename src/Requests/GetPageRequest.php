@@ -25,6 +25,10 @@ class GetPageRequest extends Request implements Cacheable
         if (! config('fabriq-connector.enable_cache')) {
             $this->disableCaching();
         }
+
+        if (request()->has('preview')) {
+            $this->disableCaching();
+        }
     }
 
     /**
