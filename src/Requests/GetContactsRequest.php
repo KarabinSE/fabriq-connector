@@ -42,7 +42,7 @@ class GetContactsRequest extends Request implements Cacheable
 
     protected function cacheKey(): ?string
     {
-        return 'fabriq_contacts';
+        return 'fabriq_contacts_'.app()->getLocale();
     }
 
     public function resolveCacheDriver(): Driver

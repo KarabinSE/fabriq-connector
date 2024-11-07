@@ -34,7 +34,7 @@ class GetNewsRequest extends Request implements Cacheable
 
     protected function cacheKey(): ?string
     {
-        return 'fabriq_articles';
+        return 'fabriq_articles_'.app()->getLocale();
     }
 
     /**
