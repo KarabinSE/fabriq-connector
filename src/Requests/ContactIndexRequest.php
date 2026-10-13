@@ -10,7 +10,7 @@ use Saloon\CachePlugin\Traits\HasCaching;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
-class GetNewsItemRequest extends Request implements Cacheable
+class ContactIndexRequest extends Request implements Cacheable
 {
     use HasCaching;
 
@@ -20,7 +20,6 @@ class GetNewsItemRequest extends Request implements Cacheable
     protected Method $method = Method::GET;
 
     public function __construct(
-        protected readonly string $slug,
         public array $params = []
     ) {
         if (! config('fabriq-connector.enable_cache')) {
@@ -33,17 +32,17 @@ class GetNewsItemRequest extends Request implements Cacheable
         return $this->params;
     }
 
-    protected function cacheKey(): ?string
-    {
-        return 'fabriq_articles_slug_'.$this->slug;
-    }
-
     /**
      * The endpoint for the request
      */
     public function resolveEndpoint(): string
     {
-        return '/news/'.$this->slug;
+        return '/contacts';
+    }
+
+    protected function cacheKey(): ?string
+    {
+        return 'fabriq_contacts_'.app()->getLocale();
     }
 
     public function resolveCacheDriver(): Driver

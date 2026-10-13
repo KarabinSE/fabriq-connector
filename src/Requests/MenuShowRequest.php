@@ -11,7 +11,7 @@ use Saloon\Enums\Method;
 use Saloon\Http\PendingRequest;
 use Saloon\Http\Request;
 
-class GetMainMenuRequest extends Request implements Cacheable
+class MenuShowRequest extends Request implements Cacheable
 {
     use HasCaching;
 

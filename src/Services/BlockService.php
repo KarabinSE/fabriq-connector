@@ -2,46 +2,62 @@
 
 namespace Karabin\FabriqConnector\Services;
 
-use Karabin\FabriqConnector\FabriqConnector;
+use Inertia\Inertia;
 
 class BlockService
 {
-    protected array $shareArray = [];
+    private array $blocks = config('fabriq-connector.block_handlers', []);
 
-    public array $blockMap = [];
+    private array $handlers = [];
 
-    public function __construct()
+    public function configure(?array $handlers = []): self
     {
-        $this->blockMap = config('fabriq-connector.block_map');
-    }
-
-    public function parseBlocks(array $blocks)
-    {
-        foreach ($blocks as $block) {
-            if (array_key_exists($block['block_type']['component_name'], $this->blockMap)) {
-                $this->share($this->blockMap[$block['block_type']['component_name']]);
-            }
-        }
+        $this->registerHandlers($handlers);
 
         return $this;
     }
 
-    public function share(array $block): array
+    public function processBlocks(array $blocks): self
     {
-        $connector = new FabriqConnector(locale: app()->getLocale());
-        $request = new $block['request']($block['params']);
-        if (config('app.env') !== 'production') {
-            $request->disableCaching();
-        }
-        $response = $connector->send($request)->throw()->json();
+        $this->blocks = array_map(
+            fn (array $block) => $this->processBlock($block),
+            $blocks
+        );
 
-        $this->shareArray[$block['key']] = $response;
-
-        return [$block['key'] => $response];
+        return $this;
     }
 
-    public function getShareArray(): array
+    public function shareInertia(): self
     {
-        return $this->shareArray;
+        Inertia::share('blocks', fn () => $this->blocks);
+
+        return $this;
+    }
+
+    private function processBlock(array $block): array
+    {
+        $handler = $this->resolveHandler($block['block_type']['component_name']);
+
+        if (! $handler) {
+            return $block;
+        }
+
+        return $handler->handle($block);
+    }
+
+    public function registerHandlers(array $handlers): self
+    {
+        $this->handlers = array_merge($this->handlers, $handlers);
+
+        return $this;
+    }
+
+    private function resolveHandler(string $blockName): ?BlockHandler
+    {
+        if (! isset($this->handlers[$blockName])) {
+            return null;
+        }
+
+        return app($this->handlers[$blockName]);
     }
 }

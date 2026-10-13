@@ -1,5 +1,8 @@
 <?php
 
+use Karabin\FabriqConnector\BlockHandler\Handlers\ArticlesBlockHandler;
+use Karabin\FabriqConnector\BlockHandler\Handlers\ContactsBlockHandler;
+
 // config for Karabin/FabriqConnector
 return [
     'base_url' => env('FABRIQ_CONNECTOR_BASE_URL', 'http://localhost'),
@@ -7,20 +10,8 @@ return [
     'cache_expiry' => env('FABRIQ_CONNECTOR_CACHE_EXPIRY', (3600 * 24) * 7),
     'cache_store' => env('FABRIQ_CONNECTOR_CACHE_STORE', 'file'),
     'fabriq_connector_token' => env('FABRIQ_CONNECTOR_TOKEN', ''),
-    'block_map' => [
-        'ContactsBlock' => [
-            'request' => Karabin\FabriqConnector\Requests\GetContactsRequest::class,
-            'key' => 'contacts',
-            'params' => [
-                'include' => 'content',
-            ],
-        ],
-        'NewsBlock' => [
-            'request' => Karabin\FabriqConnector\Requests\GetNewsRequest::class,
-            'key' => 'news',
-            'params' => [
-                'include' => 'content',
-            ],
-        ],
+    'block_handlers' => [
+        'ContactsBlock' => ContactsBlockHandler::class,
+        'ArticlesBlock' => ArticlesBlockHandler::class,
     ],
 ];

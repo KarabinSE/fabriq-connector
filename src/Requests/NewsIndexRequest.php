@@ -10,7 +10,7 @@ use Saloon\CachePlugin\Traits\HasCaching;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
-class GetPageRequest extends Request implements Cacheable
+class NewsIndexRequest extends Request implements Cacheable
 {
     use HasCaching;
 
@@ -20,28 +20,29 @@ class GetPageRequest extends Request implements Cacheable
     protected Method $method = Method::GET;
 
     public function __construct(
-        protected string $slug = 'start',
+        public array $params = []
     ) {
         if (! config('fabriq-connector.enable_cache')) {
             $this->disableCaching();
         }
-
-        if (request()->has('preview')) {
-            $this->disableCaching();
-        }
     }
 
-    /**
-     * Define the endpoint for the request
-     */
-    public function resolveEndpoint(): string
+    protected function defaultQuery(): array
     {
-        return '/pages/'.$this->slug;
+        return $this->params;
     }
 
     protected function cacheKey(): ?string
     {
-        return 'fabriq_pages_slug_'.$this->slug.'_'.app()->getLocale();
+        return 'fabriq_articles_'.app()->getLocale();
+    }
+
+    /**
+     * The endpoint for the request
+     */
+    public function resolveEndpoint(): string
+    {
+        return '/news';
     }
 
     public function resolveCacheDriver(): Driver
