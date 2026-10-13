@@ -1,0 +1,19 @@
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
+export default defineConfig({
+    plugins: [
+        vue(),
+    ],
+
+    build: {
+        lib: {
+            entry: 'resources/js/index.ts',
+            formats: ['es'],
+            fileName: 'index',
+        },
+        rollupOptions: {
+            external: ['vue', '@inertiajs/vue3'],
+        },
+    },
+})
