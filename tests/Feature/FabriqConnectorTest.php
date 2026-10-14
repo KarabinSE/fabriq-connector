@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use Karabin\FabriqConnector\FabriqConnector;
-use Karabin\FabriqConnector\Requests\GetContactsRequest;
-use Karabin\FabriqConnector\Requests\GetNewsRequest;
+use Karabin\FabriqConnector\Requests\ContactIndexRequest;
+use Karabin\FabriqConnector\Requests\NewsIndexRequest;
 use Karabin\FabriqConnector\Tests\TestCase;
 use Saloon\Http\Faking\MockResponse;
 use Saloon\Laravel\Saloon;
@@ -12,7 +12,7 @@ use Saloon\MockConfig;
 
 class FabriqConnectorTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         MockConfig::setFixturePath('tests/_fixtures/Saloon');
@@ -33,10 +33,10 @@ class FabriqConnectorTest extends TestCase
     {
         // Arrange
         Saloon::fake([
-            GetNewsRequest::class => MockResponse::fixture('news'),
+            NewsIndexRequest::class => MockResponse::fixture('news'),
         ]);
         $connector = new FabriqConnector(locale: 'en');
-        $request = new GetNewsRequest();
+        $request = new NewsIndexRequest;
 
         // Act
         $response = $connector->send($request);
@@ -49,10 +49,10 @@ class FabriqConnectorTest extends TestCase
     {
         // Arrange
         Saloon::fake([
-            GetContactsRequest::class => MockResponse::fixture('contacts'),
+            ContactIndexRequest::class => MockResponse::fixture('contacts'),
         ]);
         $connector = new FabriqConnector('en');
-        $request = new GetContactsRequest();
+        $request = new ContactIndexRequest;
 
         // Act
         $response = $connector->send($request);
