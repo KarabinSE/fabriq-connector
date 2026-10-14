@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Integrations\Fabriq\Requests;
+namespace Karabin\FabriqConnector\Requests;
 
 use Saloon\Enums\Method;
 use Saloon\Http\Request;

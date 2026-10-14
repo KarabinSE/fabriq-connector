@@ -2,13 +2,13 @@
 
 namespace Karabin\FabriqConnector;
 
-use App\Http\Integrations\Fabriq\Requests\PreviewShowRequest;
 use Illuminate\Http\Client\Request;
 use Karabin\FabriqConnector\Requests\ContactIndexRequest;
 use Karabin\FabriqConnector\Requests\MenuShowRequest;
 use Karabin\FabriqConnector\Requests\NewsIndexRequest;
 use Karabin\FabriqConnector\Requests\NewsShowRequest;
 use Karabin\FabriqConnector\Requests\PageShowRequest;
+use Karabin\FabriqConnector\Requests\PreviewShowRequest;
 use Saloon\Http\Response;
 
 class FabriqRepository extends Request
