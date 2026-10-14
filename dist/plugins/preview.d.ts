@@ -1,3 +1,4 @@
+import { App } from 'vue';
 type FabriqMessage = 'preview-ready' | 'locate-block';
 export type FabriqEvent = `fabriq-${FabriqMessage}`;
 export type PreviewMessageData = {
@@ -10,6 +11,6 @@ export interface FabriqPreviewPluginOptions {
     scroll_padding?: string;
 }
 export declare const FabriqPreview: {
-    install: <TApp>(app: TApp, options: FabriqPreviewPluginOptions) => void;
+    install: (app: App, options: FabriqPreviewPluginOptions) => void;
 };
 export {};

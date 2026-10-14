@@ -1,4 +1,5 @@
 import { router } from '@inertiajs/vue3'
+import { App } from 'vue'
 
 type FabriqMessage = 'preview-ready' | 'locate-block'
 
@@ -57,7 +58,7 @@ function getEventHander(event: PreviewMessageData) {
 
 
 export const FabriqPreview = {
-    install: <TApp>(app: TApp, options: FabriqPreviewPluginOptions) => {
+    install: (app: App, options: FabriqPreviewPluginOptions) => {
         if(typeof window === 'undefined') {
             return
         }
