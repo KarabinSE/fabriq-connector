@@ -11,7 +11,7 @@ use Karabin\FabriqConnector\Requests\NewsShowRequest;
 use Karabin\FabriqConnector\Requests\PageShowRequest;
 use Saloon\Http\Response;
 
-final class FabriqRepository extends Request
+class FabriqRepository extends Request
 {
     private readonly FabriqConnector $connector;
 

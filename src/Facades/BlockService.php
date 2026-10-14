@@ -4,7 +4,10 @@ namespace Karabin\FabriqConnector\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-final class BlockService extends Facade
+/**
+ * @see \Karabin\FabriqConnector\Services\BlockService
+ */
+class BlockService extends Facade
 {
     protected static function getFacadeAccessor(): string
     {

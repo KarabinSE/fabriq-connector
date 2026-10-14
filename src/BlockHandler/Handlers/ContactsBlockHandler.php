@@ -5,7 +5,7 @@ namespace Karabin\FabriqConnector\BlockHandler\Handlers;
 use Karabin\FabriqConnector\BlockHandler\BlockHandler;
 use Karabin\FabriqConnector\Integrations;
 
-final class ContactsBlockHandler extends BlockHandler
+class ContactsBlockHandler extends BlockHandler
 {
     public function handle(array $block): array
     {
