@@ -2,7 +2,6 @@
 
 namespace Karabin\FabriqConnector;
 
-use Illuminate\Http\Client\Request;
 use Karabin\FabriqConnector\Requests\ContactIndexRequest;
 use Karabin\FabriqConnector\Requests\MenuShowRequest;
 use Karabin\FabriqConnector\Requests\NewsIndexRequest;
@@ -88,7 +87,10 @@ class FabriqRepository
 
     public function article(string $slug, $params = [])
     {
-        $request = new NewsShowRequest($slug, $params);
+        $request = new NewsShowRequest($slug, [
+            'include' => 'content,slugs',
+            ...$params,
+        ]);
 
         return $this->connector->send($request);
     }
