@@ -7,9 +7,14 @@ use Karabin\FabriqConnector\BlockHandler\BlockHandler;
 
 class BlockService
 {
-    private array $blocks = config('fabriq-connector.block_handlers', []);
+    public array $blocks = [];
 
-    private array $handlers = [];
+    public array $handlers = [];
+
+    public function __construct()
+    {
+        $this->handlers = config('fabriq-connector.block_handlers', []);
+    }
 
     public function configure(?array $handlers = []): self
     {
