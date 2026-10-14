@@ -86,9 +86,9 @@ class FabriqRepository extends Request
         return $this->connector->send($request);
     }
 
-    public function article(string $slug)
+    public function article(string $slug, $params = [])
     {
-        $request = new NewsShowRequest($slug);
+        $request = new NewsShowRequest($slug, $params);
 
         return $this->connector->send($request);
     }
