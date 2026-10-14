@@ -13,5 +13,6 @@ return [
     'block_handlers' => [
         'ContactsBlock' => ContactsBlockHandler::class,
         'ArticlesBlock' => ArticlesBlockHandler::class,
+        // add additional global block handlers here
     ],
 ];
