@@ -21,6 +21,20 @@ This makes block processing:
 - explicit and type-safe for each block component
 - easier to extend without editing central request configuration
 
+## Request class renames
+
+The request classes were renamed to describe the resource and action. If your application refers to these request classes directly, update the imports and class names:
+
+| v1 class | v2 class |
+| --- | --- |
+| `GetContactsRequest` | `ContactIndexRequest` |
+| `GetMainMenuRequest` | `MenuShowRequest` |
+| `GetNewsRequest` | `NewsIndexRequest` |
+| `GetNewsItemRequest` | `NewsShowRequest` |
+| `GetPageRequest` | `PageShowRequest` |
+
+For example, update `Karabin\FabriqConnector\Requests\GetContactsRequest` to `Karabin\FabriqConnector\Requests\ContactIndexRequest`. The supported methods on `Integrations::fabriq()`—such as `contacts()`, `articles()`, `article()`, `page()`, and `menus()`—can be used instead of constructing request classes directly.
+
 ## 1. Update your config
 
 Replace the old `block_map` configuration with `block_handlers`.
@@ -30,7 +44,7 @@ Replace the old `block_map` configuration with `block_handlers`.
 ```php
 'block_map' => [
     'ContactsBlock' => [
-        'request' => ContactsRequest::class,
+        'request' => GetContactsRequest::class,
         'params' => ['include' => 'content'],
     ],
 ],
@@ -195,7 +209,7 @@ The keys (`primary`, `secondary`, and `footer`) are the prop names your frontend
 // legacy request-config based flow
 $shareable = ShareableArrayFromResponse::make(
     'ContactsBlock',
-    ContactsRequest::class,
+    GetContactsRequest::class,
     ['include' => 'content']
 );
 ```
