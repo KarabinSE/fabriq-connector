@@ -11,9 +11,9 @@ use Karabin\FabriqConnector\Requests\PageShowRequest;
 use Karabin\FabriqConnector\Requests\PreviewShowRequest;
 use Saloon\Http\Response;
 
-class FabriqRepository extends Request
+class FabriqRepository
 {
-    private readonly FabriqConnector $connector;
+    protected readonly FabriqConnector $connector;
 
     public function __construct($locale)
     {
