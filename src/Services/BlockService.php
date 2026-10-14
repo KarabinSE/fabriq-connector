@@ -2,7 +2,6 @@
 
 namespace Karabin\FabriqConnector\Services;
 
-use Inertia\Inertia;
 use Karabin\FabriqConnector\BlockHandler\BlockHandler;
 
 class BlockService
@@ -33,11 +32,9 @@ class BlockService
         return $this;
     }
 
-    public function shareInertia(): self
+    public function blocks(): array
     {
-        Inertia::share('blocks', fn () => $this->blocks);
-
-        return $this;
+        return $this->blocks;
     }
 
     private function processBlock(array $block): array

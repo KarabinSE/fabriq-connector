@@ -9,7 +9,7 @@ Version 2 replaces the old request-config style sharing flow with explicit block
 | BlockService  | `ShareableArrayFromResponse` was removed and replaced with `BlockService` plus dedicated `BlockHandler` classes. | Replace any legacy shareable response code with`BlockService::processBlocks()` and custom handlers. |
 | Configuration | The legacy`block_map` setting was replaced with `block_handlers`.                                                  | Update your config to map a block component name to a handler class.                                  |
 | Registration  | Handlers are now resolved by component name and can be registered globally or at runtime.                              | Register handlers in the config or call`BlockService::configure()` before processing blocks.        |
-| Front end     | BlockService `->shareInertia` method shares a `blocks` prop that contain the processed blocks                      | use `blocks` for rendering the blocks                                                              |
+| Front end     | `shareInertia()` and the connector's `inertiajs/inertia-laravel` dependency were removed. Block processing is now separate from frontend rendering or response handling. | Retrieve processed blocks with `blocks()` and pass them through your application's usual flow. Add `inertiajs/inertia-laravel` as a direct dependency if your application uses Inertia. |
 
 ## Why this changed
 
@@ -25,13 +25,13 @@ This makes block processing:
 
 The request classes were renamed to describe the resource and action. If your application refers to these request classes directly, update the imports and class names:
 
-| v1 class | v2 class |
-| --- | --- |
+| v1 class               | v2 class                |
+| ---------------------- | ----------------------- |
 | `GetContactsRequest` | `ContactIndexRequest` |
-| `GetMainMenuRequest` | `MenuShowRequest` |
-| `GetNewsRequest` | `NewsIndexRequest` |
-| `GetNewsItemRequest` | `NewsShowRequest` |
-| `GetPageRequest` | `PageShowRequest` |
+| `GetMainMenuRequest` | `MenuShowRequest`     |
+| `GetNewsRequest`     | `NewsIndexRequest`    |
+| `GetNewsItemRequest` | `NewsShowRequest`     |
+| `GetPageRequest`     | `PageShowRequest`     |
 
 For example, update `Karabin\FabriqConnector\Requests\GetContactsRequest` to `Karabin\FabriqConnector\Requests\ContactIndexRequest`. The supported methods on `Integrations::fabriq()`—such as `contacts()`, `articles()`, `article()`, `page()`, and `menus()`—can be used instead of constructing request classes directly.
 
@@ -154,52 +154,39 @@ BlockService::configure([
 ]);
 ```
 
-## 5. Process blocks before sharing them
+## 5. Process blocks and use the result in your application
 
-In v1, blocks were usually resolved through the old shareable response flow. In v2, call `BlockService` explicitly before sharing data with Inertia.
+In v1, blocks were usually resolved through the old shareable response flow. In v2, call `BlockService` explicitly to process the blocks, then pass the result through your application's normal response or rendering flow.
 
 ```php
 use Karabin\FabriqConnector\Facades\BlockService;
 
 $blocks = $page['blocks'] ?? [];
 
-BlockService::processBlocks($blocks)
-    ->shareInertia();
+$processedBlocks = BlockService::configure()
+    ->processBlocks($blocks)
+    ->blocks();
 ```
 
-`processBlocks()` applies each matching handler to the incoming block payload and returns the transformed blocks. `shareInertia()` then shares the processed result with Inertia.
+`processBlocks()` applies each matching handler to the incoming block payload. `blocks()` returns the transformed blocks; the connector does not automatically share them with a frontend. The connector no longer requires `inertiajs/inertia-laravel`; if your application uses Inertia, declare that package as a direct application dependency.
 
-### Always include menus in Inertia responses
+### Fetch menus
 
-To make menus available on every Inertia page, fetch them in your application's `HandleInertiaRequests` middleware and add them to the shared props:
+Fetch menu data with `Integrations::fabriq()->menus()` and add it to your application's response or rendered data as needed:
 
 ```php
-use Illuminate\Http\Request;
-use Inertia\Middleware;
 use Karabin\FabriqConnector\Integrations;
 
-class HandleInertiaRequests extends Middleware
-{
-    public function share(Request $request): array
-    {
-        $locale = app()->getLocale();
+$locale = app()->getLocale();
 
-		$menus = Integrations::fabriq()
-            ->menus([
-                'primary' => "main_menu_$locale",
-                'secondary' => "secondary_menu_$locale",
-                'footer' => "footer_menu_$locale",
-            ]);
-
-        return [
-            ...parent::share($request),
-            'menus' => $menus,
-        ];
-    }
-}
+$menus = Integrations::fabriq()->menus([
+    'primary' => "main_menu_{$locale}",
+    'secondary' => "secondary_menu_{$locale}",
+    'footer' => "footer_menu_{$locale}",
+]);
 ```
 
-The keys (`primary`, `secondary`, and `footer`) are the prop names your frontend can use. The corresponding values are the Fabriq menu identifiers. Since this runs for each Inertia request, these menus are included in shared page props throughout the application.
+The keys (`primary`, `secondary`, and `footer`) are the menu names your frontend can use. The corresponding values are the Fabriq menu identifiers. The connector returns the menu data but leaves sharing or rendering it to your application.
 
 ## 6. Example migration
 
@@ -223,8 +210,9 @@ BlockService::configure([
     'ContactsBlock' => App\Fabriq\Blocks\ContactsBlockHandler::class,
 ]);
 
-BlockService::processBlocks($blocks)
-    ->shareInertia();
+$processedBlocks = BlockService::configure()
+    ->processBlocks($blocks)
+    ->blocks();
 ```
 
 ## 7. Migration checklist
@@ -233,7 +221,7 @@ BlockService::processBlocks($blocks)
 - Create one `BlockHandler` class per block type
 - Make sure each handler returns the original block plus any transformed data
 - Register the handlers globally or via `BlockService::configure()`
-- Call `processBlocks()` and `shareInertia()` before rendering your page
+- Call `processBlocks()` and retrieve the processed blocks with `blocks()`
 
 ## 8. Notes
 

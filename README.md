@@ -80,17 +80,24 @@ final class ContactsBlockHandler extends BlockHandler
 }
 ```
 
-Register handlers and share the processed blocks with Inertia:
+Register handlers and retrieve the processed blocks:
 
 ```php
 use Karabin\FabriqConnector\Facades\BlockService;
 
-BlockService::configure(config('fabriq-connector.block_handlers'))
+$blocks = BlockService::configure()
     ->processBlocks($page->blocks)
-    ->shareInertia();
+    ->blocks();
+
+$pageData = [
+    'page' => $page->page,
+    'blocks' => $blocks,
+];
 ```
 
-`processBlocks()` matches each block's `block_type.component_name` to a registered handler. Blocks without a matching handler pass through unchanged. `shareInertia()` shares the processed list as the `blocks` prop.
+`processBlocks()` matches each block's `block_type.component_name` to a registered handler. Blocks without a matching handler pass through unchanged. `blocks()` returns the processed blocks; include them in whichever response or rendering mechanism your application uses.
+
+Block processing does not require Inertia. If your application uses Inertia, include `inertiajs/inertia-laravel` as a direct dependency of your application.
 
 ## Add an integration
 
@@ -115,36 +122,23 @@ class Integrations extends BaseIntegrations
 
 Your handlers can then call `App\Support\Integrations::silo()->locations()`. `SiloRequest` is application-provided and is not included in this package.
 
-## Share menus with every Inertia response
+## Fetch menus
 
-Fetch menus from your `HandleInertiaRequests` middleware's `share()` method to make them available in the shared Inertia props:
+Fetch menus with `Integrations::fabriq()->menus()` and add them to the data your application returns or renders:
 
 ```php
-use Illuminate\Http\Request;
-use Inertia\Middleware;
 use Karabin\FabriqConnector\Integrations;
 
-class HandleInertiaRequests extends Middleware
-{
-    public function share(Request $request): array
-    {
-        $locale = app()->getLocale();
+$locale = app()->getLocale();
 
-		$menus = Integrations::fabriq()->menus([
-            'primary' => "main_menu_{$locale}",
-            'secondary' => "secondary_menu_{$locale}",
-            'footer' => "footer_menu_{$locale}",
-        ])
-
-        return [
-            ...parent::share($request),
-            'nav' => $menus,
-        ];
-    }
-}
+$nav = Integrations::fabriq()->menus([
+    'primary' => "main_menu_$locale",
+    'secondary' => "secondary_menu_$locale",
+    'footer' => "footer_menu_$locale",
+]);
 ```
 
-The array keys become menu prop names (`primary`, `secondary`, and `footer`); the values are the corresponding Fabriq menu identifiers.
+The array keys become menu names (`primary`, `secondary`, and `footer`); the values are the corresponding Fabriq menu identifiers. The connector returns the menu data but does not automatically share it with a frontend.
 
 ## Testing
 
