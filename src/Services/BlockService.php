@@ -3,6 +3,7 @@
 namespace Karabin\FabriqConnector\Services;
 
 use Inertia\Inertia;
+use Karabin\FabriqConnector\BlockHandler\BlockHandler;
 
 class BlockService
 {
