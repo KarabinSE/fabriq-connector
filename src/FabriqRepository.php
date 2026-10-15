@@ -38,18 +38,28 @@ class FabriqRepository
         ];
     }
 
+    public function menu(string $fabriqMenuName, ?array $params = [])
+    {
+        $request = new MenuShowRequest($fabriqMenuName, $params);
+
+        return $this->connector->send($request);
+    }
+
     /**
      * Fetches fabriq menus and maps them to the given keys
      *
      * @param  array<string, string>  $menus
-     * @return array
+     * @return array<string, string>
      */
-    public function menus(array $menus)
+    public function menus(array $menus, ?array $params = [])
     {
         $data = [];
 
-        $requests = collect($menus)->flatMap(function ($fabriqMenuName, $menuName) {
-            return [$menuName => new MenuShowRequest($fabriqMenuName, ['include' => 'children,content,children.content'])];
+        $requests = collect($menus)->flatMap(function ($fabriqMenuName, $menuName) use ($params) {
+            return [$menuName => new MenuShowRequest($fabriqMenuName, [
+                'include' => 'content,children.content',
+                ...$params,
+            ])];
         });
 
         $this->connector->pool()
