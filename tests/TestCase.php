@@ -3,8 +3,9 @@
 namespace Karabin\FabriqConnector\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Orchestra\Testbench\TestCase as Orchestra;
 use Karabin\FabriqConnector\FabriqConnectorServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
+use Saloon\Laravel\SaloonServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -21,6 +22,7 @@ class TestCase extends Orchestra
     {
         return [
             FabriqConnectorServiceProvider::class,
+            SaloonServiceProvider::class,
         ];
     }
 
