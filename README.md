@@ -19,6 +19,14 @@ Publish the configuration file:
 php artisan vendor:publish --tag="fabriq-connector-config"
 ```
 
+**Before extending the package's integrations or Fabriq repository, publish the extension classes into your application:**
+
+```bash
+php artisan fabriq-connector:publish
+```
+
+This creates `app/Http/Integrations/Integrations.php` and `app/Http/Integrations/Fabriq/FabriqRepository.php`. Extend these application classes to add integration factories or customize Fabriq repository methods. The command overwrites existing files at these paths, so back up or update them before running it again.
+
 Configure the Fabriq API URL and token in your environment:
 
 ```dotenv
@@ -99,28 +107,46 @@ $pageData = [
 
 Block processing does not require Inertia. If your application uses Inertia, include `inertiajs/inertia-laravel` as a direct dependency of your application.
 
+Generate a handler with Artisan by providing the block name; the command appends `Handler`:
+
+```bash
+php artisan fabriq:make-block-handler ContactsBlock
+```
+
+Omit the name to be prompted for it. The generated class is placed in `app/Support/BlockHandlers` and is ready to register in `config/fabriq-connector.php`.
+
 ## Add an integration
 
-To add an API such as Silo, extend the package's `Integrations` class in your application and add a factory for your request class:
+First of all its recommended to do `php artisan fabriq-connector:publish` if you want to extend the functionality. It will publish classes ready for you to extend.
+
+For example, to connect to Silo and fetch locations, extend the package's `Integrations` class in your application with a factory for your Silo repository:
 
 ```php
 <?php
 
-namespace App\Support;
+namespace App\Http\Integrations;
 
-use App\Integrations\SiloRequest;
+use App\Http\Integrations\Silo\SiloRepository;
 use Karabin\FabriqConnector\Integrations as BaseIntegrations;
 
 class Integrations extends BaseIntegrations
 {
-    public static function silo(): SiloRequest
+    public static function silo(): SiloRepository
     {
-        return new SiloRequest();
+        return new SiloRepository();
     }
 }
 ```
 
-Your handlers can then call `App\Support\Integrations::silo()->locations()`. `SiloRequest` is application-provided and is not included in this package.
+The repository is where you add methods that send your Silo requests, such as `locations()`. Request classes and their endpoint details are specific to your application and are not included in this package.
+
+To generate an integration repository, run:
+
+```bash
+php artisan fabriq:make-integration silo SiloConnector
+```
+
+The command creates `app/Http/Integrations/Silo/SiloRepository.php`. If `SiloConnector` does not exist, the command asks whether to create it with Saloon's `saloon:connector` command. You can also omit either argument to be prompted for it.
 
 ## Fetch menus
 

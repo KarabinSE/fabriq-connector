@@ -78,21 +78,21 @@ A handler can call `Integrations::fabriq()` directly to fetch the data needed fo
 
 The package's `Karabin\FabriqConnector\Integrations` class provides the connector's built-in integrations and can be extended by your application. Create an application class that extends it and add a static factory method for each additional API you want to expose. The inherited `fabriq()` factory remains available.
 
-In this example, `SiloRequest` is a request class provided by your application or another dependency; it is not included in this package.
+In this example, `SiloRepository` is the application repository for a fictional CMS integration. Its request classes and endpoint details are provided by your application, not this package.
 
 ```php
 <?php
 
 namespace App\Support;
 
-use App\Integrations\SiloRequest;
+use App\Http\Integrations\Silo\SiloRepository;
 use Karabin\FabriqConnector\Integrations as BaseIntegrations;
 
 class Integrations extends BaseIntegrations
 {
-    public static function silo(): SiloRequest
+    public static function silo(): SiloRepository
     {
-        return new SiloRequest();
+        return new SiloRepository();
     }
 }
 ```
@@ -120,14 +120,14 @@ final class ContactsBlockHandler extends BlockHandler
             ->contacts($params)
             ->json('data', []);
 
-        $locations = Integrations::silo()
-            ->locations()
+        $pages = Integrations::silo()
+            ->pages()
             ->dto();
 
         return [
             ...$block,
             'contacts' => $contacts,
-            'locations' => $locations,
+            'pages' => $pages,
         ];
     }
 }

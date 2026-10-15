@@ -1,0 +1,19 @@
+<?php
+
+namespace {{ namespace }};
+
+use Karabin\FabriqConnector\BlockHandler\BlockHandler;
+
+class {{ class }} extends BlockHandler
+{
+    public function handle(array $block): array
+    {
+        // TODO: implement {{ class }} handle
+
+        return [
+            ...$block,
+            // append stuff to the block by adding stuff here
+        ];
+    }
+}
+

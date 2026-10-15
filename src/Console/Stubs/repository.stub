@@ -1,0 +1,22 @@
+<?php
+
+namespace {{ namespace }};
+
+use Illuminate\Http\Client\Request;
+
+class {{ class }}
+{
+    private readonly {{ connector }} $connector;
+
+    public function __construct()
+    {
+        $this->connector = new {{ connector }};
+    }
+
+    // public function pages(?array $params = [])
+    // {
+    //     $request = new \App\Http\Integrations\{{ integration }}\Requests\IndexPageRequest($params);
+
+    //     return $this->connector->send($request);
+    // }
+}
