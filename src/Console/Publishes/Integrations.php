@@ -14,5 +14,7 @@ class Integrations extends FabriqIntegrations
 
     /**
      * Here you can add your own integrations like example() or anotherIntegration()
+     *
+     * Create a new integration with php artisan fabriq:make-integration
      */
 }
