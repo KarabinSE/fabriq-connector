@@ -49,7 +49,7 @@ class FabriqRepository
      * Fetches fabriq menus and maps them to the given keys
      *
      * @param  array<string, string>  $menus
-     * @return array<string, string>
+     * @return array
      */
     public function menus(array $menus, ?array $params = [])
     {
