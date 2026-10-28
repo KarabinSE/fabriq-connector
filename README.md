@@ -7,6 +7,11 @@ Laravel integration for the Fabriq API, built with Saloon.
 
 ## Installation
 
+|  Fabriq Version |  Command |
+|--|--|
+|  `=< 4` | `composer require karabinse/fabriq-connector:"^2.0"`   |
+| `> 5` | `composer require karabinse/fabriq-connector:"^3.0"`  |
+
 Install the package with Composer:
 
 ```bash
