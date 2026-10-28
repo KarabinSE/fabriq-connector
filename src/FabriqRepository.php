@@ -34,7 +34,7 @@ class FabriqRepository
 
         return (object) [
             'page' => $response->json(),
-            'blocks' => $response->json('data.content.data.boxes', []),
+            'blocks' => $response->json('data.blocks', []),
         ];
     }
 
