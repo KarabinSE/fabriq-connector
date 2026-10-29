@@ -39,7 +39,7 @@ class BlockService
 
     private function processBlock(array $block): array
     {
-        $handler = $this->resolveHandler($block['block_type']['component_name']);
+        $handler = $this->resolveHandler($block['component_name']);
 
         if (! $handler) {
             return $block;
